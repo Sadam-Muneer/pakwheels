@@ -1,0 +1,43 @@
+generator client {
+                    provider = "prisma-client-js"
+}
+
+datasource db {
+                    provider = "mongodb"
+                    url      = env("DATABASE_URL")
+}
+
+model User {
+                    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+                    name         String?
+                    email        String   @unique
+                    image        String?
+                    bookedVisits Json[]
+                    favCarsID    String[] @db.ObjectId
+                    ownedCars    Car[]    @relation("owner")
+}
+
+model Car {
+                    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+                    title       String
+                    description String
+                    price       Int
+                    brand       String
+                    model       String
+                    year        Int
+                    features    Json
+                    image       String
+                    listType    ListType
+                    userEmail   String
+                    owner       User     @relation("owner", fields: [userEmail], references: [email])
+                    createdAt   DateTime @default(now())
+                    updatedAt   DateTime @updatedAt
+
+                    @@unique(fields: [title, userEmail])
+}
+
+enum ListType {
+                    SELL
+                    BUY
+                    RENT
+}
