@@ -32,11 +32,7 @@ const About = () => {
     <section id="about" className="max-padd-container py-16 xl:py-28">
       <div className="flex ">
         <div className="flex-1 relative">
-          <img
-            src={CarImage} // Update the image for cars
-            alt="CarImage"
-            className="rounded-xl"
-          />
+          <img src={CarImage} alt="CarImage" className="rounded-xl" />
           <div
             className={`bg-white absolute bottom-0 left-3 sm:left-16 max-w-xs p-4 rounded-lg flexCenter flex-col ${
               isVisible ? "block" : "hidden"
@@ -90,5 +86,4 @@ const About = () => {
     </section>
   );
 };
-
 export default About;

@@ -9,11 +9,8 @@ const Hero = () => {
           <h1 className="h1 capitalize max-w-[40rem] bg-dark">
             Discover Your Next Car with PakWheels
           </h1>
-          <p className="my-10 max-w-[33rem] bg-black rounded-lg p-2">
-            Explore our listings and find your perfect car today. Start your
-            journey to car ownership with us.
-          </p>
-          <div className="inline-flex items-center justify-center gap-4 p-2 bg-white rounded-xl">
+
+          <div className="inline-flex items-center justify-center gap-4 p-2 bg-white rounded-xl mt-52">
             <div className="text-center regular-14 leading-tight pl-5">
               <h5 className="uppercase font-bold">10% Off</h5>
               <p className="regular-14">On All Car Listings</p>

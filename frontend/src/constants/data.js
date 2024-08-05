@@ -6,13 +6,13 @@ import img3 from "../assets/image3.jpg";
 import img4 from "../assets/image4.jpg";
 import img5 from "../assets/image5.jpg";
 import image1 from "../assets/image1.jpg";
-import blog1 from "../assets/blog1.jpg";
-import blog2 from "../assets/image2.jpg";
+import blog1 from "../assets/image2.jpg";
+import blog2 from "../assets/image4.jpg";
 import blog3 from "../assets/image3.jpg";
-import blog4 from "../assets/image4.jpg";
-import blogtwo from "../assets/blog2.jpg";
-import blogthree from "../assets/blog3.jpg";
-import blogfour from "../assets/blog4.jpg";
+import blog4 from "../assets/image5.jpg";
+import blogtwo from "../assets/image8.jpg";
+import blogthree from "../assets/image5.jpg";
+import blogfour from "../assets/image3.jpg";
 
 // Add unique ID and additional fields to each car
 export const CARS = [
