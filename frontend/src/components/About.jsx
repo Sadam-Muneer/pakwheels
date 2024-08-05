@@ -1,4 +1,4 @@
-import CarImage from "../assets/about.jpg"; // Replace with the appropriate image for cars
+import CarImage from "../assets/about.webp";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
@@ -30,15 +30,15 @@ const About = () => {
 
   return (
     <section id="about" className="max-padd-container py-16 xl:py-28">
-      <div className="flex flex-col xl:flex-row gap-10">
+      <div className="flex ">
         <div className="flex-1 relative">
           <img
             src={CarImage} // Update the image for cars
             alt="CarImage"
-            className="rounded-3xl rounded-tr-[155px] w-[488px]"
+            className="rounded-xl"
           />
           <div
-            className={`bg-white absolute bottom-16 left-3 sm:left-16 max-w-xs p-4 rounded-lg flexCenter flex-col ${
+            className={`bg-white absolute bottom-0 left-3 sm:left-16 max-w-xs p-4 rounded-lg flexCenter flex-col ${
               isVisible ? "block" : "hidden"
             }`}
           >

@@ -1,20 +1,20 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import { MdAddHome, MdHomeWork } from "react-icons/md";
+import { MdAddHome, MdHomeWork, MdVideoLibrary } from "react-icons/md";
 import { RiCheckboxMultipleBlankFill } from "react-icons/ri";
-import { MdPerson } from "react-icons/md";
-import { useState } from "react"; // Import useState hook
+import { useState } from "react";
 import AddPropertyModel from "../components/AddPropertyModel";
 import UseAuthChck from "../hooks/UseAuthChck";
 
 const Navbar = ({ containerStyles, closeMenu }) => {
-  const [modelOpened, setModelOpened] = useState(false); // State to manage modal open/close
+  const [modelOpened, setModelOpened] = useState(false);
   const { validateLogin } = UseAuthChck();
 
   const handleAddCarClick = () => {
     if (validateLogin()) {
-      setModelOpened(true); // Open the modal if user is authenticated
+      setModelOpened(true);
     }
+    <MdVideoLibrary />;
   };
 
   return (
@@ -44,7 +44,7 @@ const Navbar = ({ containerStyles, closeMenu }) => {
         <div>Cars</div>
       </NavLink>
       <NavLink
-        to="/agent"
+        to="/videos"
         className={({ isActive }) =>
           isActive
             ? "active-link flexCenter gap-x-1 rounded-full px-2 py-1"
@@ -52,8 +52,8 @@ const Navbar = ({ containerStyles, closeMenu }) => {
         }
         onClick={closeMenu}
       >
-        <MdPerson />
-        <div>Agents</div>
+        <MdVideoLibrary />
+        <div>Videos</div>
       </NavLink>
       <div
         onClick={handleAddCarClick}

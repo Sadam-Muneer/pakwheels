@@ -4,12 +4,12 @@ const Hero = () => {
   return (
     <section className="max-padd-container pt-[99px]">
       <div className="max-padd-container bg-hero bg-center bg-cover bg-no-repeat h-[655px] w-full rounded-3xl">
-        <div className="relative top-32 xs:top-52">
+        <div className="relative top-32 xs:top-40">
           <span className="medium-18">Welcome to PakWheels</span>
-          <h1 className="h1 capitalize max-w-[40rem]">
+          <h1 className="h1 capitalize max-w-[40rem] bg-dark">
             Discover Your Next Car with PakWheels
           </h1>
-          <p className="my-10 max-w-[33rem]">
+          <p className="my-10 max-w-[33rem] bg-black rounded-lg p-2">
             Explore our listings and find your perfect car today. Start your
             journey to car ownership with us.
           </p>
@@ -22,7 +22,7 @@ const Hero = () => {
               to={"/listing"}
               className="btn-secondary rounded-xl flexCenter !py-4"
             >
-              Shop Now
+              Visit Now
             </Link>
           </div>
         </div>
