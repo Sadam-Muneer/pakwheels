@@ -9,9 +9,9 @@ import jwtCheck from "../Config/Auth0Config.js";
 
 const router = express.Router();
 
-router.post("/register", jwtCheck, createUser);
-router.post("/bookcar/:id", jwtCheck, bookCar);
-router.post("/allBookedCars", allBookedCars);
-router.post("/cancelCarBookings/:id", cancelCarBookings);
+router.post("/register", createUser); // No jwtCheck middleware
+router.post("/bookcar/:id", jwtCheck, bookCar); // jwtCheck middleware applied
+router.post("/allBookedCars", jwtCheck, allBookedCars); // jwtCheck middleware applied
+router.post("/cancelCarBookings/:id", jwtCheck, cancelCarBookings); // jwtCheck middleware applied
 
 export { router as userRoutes };

@@ -9,11 +9,17 @@ export const createCar = asyncHandler(async (req, res) => {
     price,
     brand,
     model,
-    year,
+
     features,
     image,
     userEmail,
     listType,
+    category,
+    kilometers,
+    color,
+    country,
+    city,
+    area,
   } = req.body;
   console.log("Received userEmail:", userEmail);
 
@@ -41,17 +47,40 @@ export const createCar = asyncHandler(async (req, res) => {
         },
       });
     }
+
+    // Check if a car with the same title and userEmail already exists
+    const existingCar = await prisma.car.findUnique({
+      where: {
+        title_userEmail: {
+          title: title,
+          userEmail: userEmail,
+        },
+      },
+    });
+
+    if (existingCar) {
+      return res.status(400).json({
+        error:
+          "A car with this title already exists for the given user. Please use a different title.",
+      });
+    }
+
     const car = await prisma.car.create({
       data: {
         title,
         description,
-        price,
+        price: parseInt(price, 10), // Ensure it is parsed as an integer
         brand,
         model,
-        year,
         features,
         image,
         listType,
+        category,
+        kilometers: parseInt(kilometers, 10), // Ensure it is parsed as an integer
+        color,
+        country,
+        city,
+        area,
         owner: { connect: { email: userEmail } },
       },
     });
@@ -65,7 +94,7 @@ export const createCar = asyncHandler(async (req, res) => {
     if (error.code === "P2002") {
       res.status(400).json({
         error:
-          "A car with this title already exists. Please check the title and try again.",
+          "A car with this title already exists for the given user. Please use a different title.",
       });
     } else {
       res.status(500).json({

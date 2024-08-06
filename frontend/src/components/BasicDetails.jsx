@@ -1,86 +1,130 @@
-import { Box, Button, Group, Select, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useState } from "react";
+import { Box, Button, Group, TextInput, Select } from "@mantine/core";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
-const BasicDetails = ({
-  prevStep,
-  nextStep,
-  propertyDetails,
-  setPropertyDetails,
-}) => {
+// Add more logging for debugging
+const BasicDetails = ({ prevStep, nextStep, carDetails, setCarDetails }) => {
   const form = useForm({
     initialValues: {
-      title: propertyDetails?.title || "",
-      description: propertyDetails?.description || "",
-      price: propertyDetails?.price.toString() || "",
-      listType: propertyDetails?.listType || "",
+      title: carDetails?.title || "",
+      description: carDetails?.description || "",
+      price: carDetails?.price || "",
+      brand: carDetails?.brand || "",
+      model: carDetails?.model || "",
+      year: carDetails?.year || "",
+      listType: carDetails?.listType || "",
+      category: carDetails?.category || "",
     },
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const { hasErrors } = form.validate();
-
-    if (!hasErrors) {
-      setPropertyDetails((prev) => ({
-        ...prev,
-        title: form.values.title,
-        description: form.values.description,
-        price: parseFloat(form.values.price), // Convert back to float
-        listType: form.values.listType,
-      }));
-      nextStep();
-    }
+  const handleSubmit = (values) => {
+    console.log("BasicDetails form values:", values);
+    setCarDetails((prev) => ({
+      ...prev,
+      ...values,
+    }));
+    nextStep();
   };
 
+  const { getInputProps, onSubmit } = form;
+
   return (
-    <Box maxWidth={"30%"} mx="auto" my={"sm"}>
-      <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={onSubmit((values) => {
+        handleSubmit(values);
+      })}
+    >
+      <Box w={"100%"} className="flex justify-center flex-wrap">
         <TextInput
           withAsterisk
+          className="mr-4"
           label="Title"
-          {...form.getInputProps("title")}
+          placeholder="Title"
+          {...getInputProps("title")}
         />
         <TextInput
           withAsterisk
+          className="mr-4"
           label="Description"
-          {...form.getInputProps("description")}
+          placeholder="Description"
+          {...getInputProps("description")}
         />
         <TextInput
           withAsterisk
+          className="mr-4"
           label="Price"
-          type="number" // Ensure input type is number
-          {...form.getInputProps("price")}
+          placeholder="Price"
+          {...getInputProps("price")}
+        />
+        <TextInput
+          withAsterisk
+          className="mr-4"
+          label="Brand"
+          placeholder="Brand"
+          {...getInputProps("brand")}
+        />
+        <TextInput
+          withAsterisk
+          className="mr-4"
+          label="Model"
+          placeholder="Model"
+          {...getInputProps("model")}
+        />
+        <TextInput
+          withAsterisk
+          className="mr-4"
+          label="Year"
+          placeholder="Year"
+          {...getInputProps("year")}
+        />
+        <Select
+          withAsterisk
+          label="Category"
+          placeholder="Pick one"
+          data={[
+            { value: "Sedan", label: "Sedan" },
+            { value: "SUV", label: "SUV" },
+            { value: "Hatchback", label: "Hatchback" },
+          ]}
+          {...getInputProps("category")}
         />
         <Select
           withAsterisk
           label="List Type"
-          data={["SELL", "BUY", "RENT"]}
-          {...form.getInputProps("listType")}
+          placeholder="Pick one"
+          data={[
+            { value: "Sale", label: "Sale" },
+            { value: "Rent", label: "Rent" },
+          ]}
+          {...getInputProps("listType")}
         />
-        <Group position="center" mt="xl">
-          <Button type="button" onClick={prevStep} variant="default">
-            Back
-          </Button>
-          <Button type="submit" color="green">
-            Next
-          </Button>
-        </Group>
-      </form>
-    </Box>
+      </Box>
+      <Group justify="center" mt="xl">
+        <Button onClick={prevStep} type="button">
+          Go Back
+        </Button>
+        <Button type="submit">Next step</Button>
+      </Group>
+    </form>
   );
 };
 
 BasicDetails.propTypes = {
   prevStep: PropTypes.func.isRequired,
-  propertyDetails: PropTypes.shape({
+  nextStep: PropTypes.func.isRequired,
+  carDetails: PropTypes.shape({
     title: PropTypes.string,
     description: PropTypes.string,
-    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // Allow both string and number
+    price: PropTypes.string,
+    brand: PropTypes.string,
+    model: PropTypes.string,
+    year: PropTypes.string,
     listType: PropTypes.string,
+    category: PropTypes.string,
   }).isRequired,
-  setPropertyDetails: PropTypes.func.isRequired,
-  nextStep: PropTypes.func.isRequired,
+  setCarDetails: PropTypes.func.isRequired,
 };
 
 export default BasicDetails;

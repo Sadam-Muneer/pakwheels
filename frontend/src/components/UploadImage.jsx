@@ -3,13 +3,8 @@ import { Button, Group } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineCloudUpload } from "react-icons/md";
 
-const UploadImage = ({
-  propertyDetails,
-  setPropertyDetails,
-  prevStep,
-  nextStep,
-}) => {
-  const [imageURL, setImageURL] = useState(propertyDetails.image);
+const UploadImage = ({ carDetails, setCarDetails, prevStep, nextStep }) => {
+  const [imageURL, setImageURL] = useState(carDetails.image);
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
 
@@ -25,14 +20,14 @@ const UploadImage = ({
         if (result.event === "success") {
           const secureUrl = result.info.secure_url;
           setImageURL(secureUrl);
-          setPropertyDetails((prev) => ({
+          setCarDetails((prev) => ({
             ...prev,
             image: secureUrl,
           }));
         }
       }
     );
-  }, [setPropertyDetails]);
+  }, [setCarDetails]);
 
   return (
     <div className="mt-12 flexCenter flex-col">
@@ -70,10 +65,10 @@ const UploadImage = ({
 };
 
 UploadImage.propTypes = {
-  propertyDetails: PropTypes.shape({
+  carDetails: PropTypes.shape({
     image: PropTypes.string,
   }).isRequired,
-  setPropertyDetails: PropTypes.func.isRequired,
+  setCarDetails: PropTypes.func.isRequired,
   prevStep: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
 };

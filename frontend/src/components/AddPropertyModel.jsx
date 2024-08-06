@@ -11,26 +11,28 @@ const AddPropertyModel = ({ opened, setOpened }) => {
   const [activeStep, setActiveStep] = useState(0);
   const { user, isAuthenticated } = useAuth0();
 
-  const [propertyDetails, setPropertyDetails] = useState({
+  const [carDetails, setCarDetails] = useState({
     title: "",
     description: "",
     price: "",
+    brand: "",
+    model: "",
+    year: "",
+    features: "",
+    image: null,
+    userEmail: "",
+    listType: "",
+    category: "",
+    kilometers: "",
+    color: "",
     country: "",
     city: "",
-    address: "",
-    image: null,
-    facilities: {
-      bedroom: "",
-      bathroom: "",
-      parking: "",
-    },
-    listType: "",
-    userEmail: "",
+    area: "",
   });
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      setPropertyDetails((prevDetails) => ({
+      setCarDetails((prevDetails) => ({
         ...prevDetails,
         userEmail: user.email || "",
       }));
@@ -39,7 +41,7 @@ const AddPropertyModel = ({ opened, setOpened }) => {
 
   const nextStep = () => {
     console.log("Current Step:", activeStep);
-    console.log("Property Details:", propertyDetails);
+    console.log("Car Details:", carDetails);
     setActiveStep((current) => current + 1);
   };
 
@@ -64,16 +66,16 @@ const AddPropertyModel = ({ opened, setOpened }) => {
             onClick={nextStep}
           >
             <AddLocation
-              propertyDetails={propertyDetails}
-              setPropertyDetails={setPropertyDetails}
+              carDetails={carDetails}
+              setCarDetails={setCarDetails}
               nextStep={nextStep}
             />
           </Stepper.Step>
 
           <Stepper.Step label="Upload Image" description="Verify Image">
             <UploadImage
-              propertyDetails={propertyDetails}
-              setPropertyDetails={setPropertyDetails}
+              carDetails={carDetails}
+              setCarDetails={setCarDetails}
               prevStep={prevStep}
               nextStep={nextStep}
             />
@@ -83,16 +85,16 @@ const AddPropertyModel = ({ opened, setOpened }) => {
             <BasicDetails
               prevStep={prevStep}
               nextStep={nextStep}
-              propertyDetails={propertyDetails}
-              setPropertyDetails={setPropertyDetails}
+              carDetails={carDetails}
+              setCarDetails={setCarDetails}
             />
           </Stepper.Step>
 
           <Stepper.Step label="Facilities" description="Get full access">
             <Facilities
               prevStep={prevStep}
-              propertyDetails={propertyDetails}
-              setPropertyDetails={setPropertyDetails}
+              carDetails={carDetails}
+              setCarDetails={setCarDetails}
               setOpened={setOpened}
               setActiveStep={setActiveStep}
             />

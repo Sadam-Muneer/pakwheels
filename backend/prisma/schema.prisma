@@ -24,7 +24,6 @@ model Car {
                     price       Int
                     brand       String
                     model       String
-                    year        Int
                     features    Json
                     image       String
                     listType    ListType
@@ -32,6 +31,12 @@ model Car {
                     owner       User     @relation("owner", fields: [userEmail], references: [email])
                     createdAt   DateTime @default(now())
                     updatedAt   DateTime @updatedAt
+                    category    String
+                    kilometers  Int
+                    color       String
+                    country     String
+                    city        String
+                    area        String
 
                     @@unique(fields: [title, userEmail])
 }

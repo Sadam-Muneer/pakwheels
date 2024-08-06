@@ -12,6 +12,7 @@ const UseAuthChck = () => {
       const response = await axios.post("/api/user/register", {
         email: user.email,
         name: user.name,
+        picture: user.picture, // Include profile picture if needed
       });
       console.log("User details saved successfully:", response.data);
       toast.success("User details saved successfully!", {
@@ -19,9 +20,14 @@ const UseAuthChck = () => {
       });
     } catch (err) {
       console.error("Error saving user details:", err);
-      toast.error("Error saving user details. Please try again.", {
-        position: "bottom-right",
-      });
+      toast.error(
+        `Error saving user details. Please try again. ${
+          err.response?.data?.message || err.message
+        }`,
+        {
+          position: "bottom-right",
+        }
+      );
     }
   };
 
@@ -43,7 +49,13 @@ const UseAuthChck = () => {
       loginWithRedirect();
       return false;
     } else {
-      saveUserDetails(user);
+      saveUserDetails(user)
+        .then(() => {
+          console.log("User authenticated and details saved.");
+        })
+        .catch((err) => {
+          console.error("Error in saving user details:", err);
+        });
     }
     return true;
   };

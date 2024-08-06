@@ -5,26 +5,26 @@ import Map from "../components/Map";
 import useCountries from "../hooks/UseCountries";
 import PropTypes from "prop-types";
 
-const AddLocation = ({ propertyDetails, setPropertyDetails, nextStep }) => {
+const AddLocation = ({ carDetails, setCarDetails, nextStep }) => {
   const { getAll } = useCountries();
   const form = useForm({
     initialValues: {
-      country: propertyDetails?.country || "",
-      city: propertyDetails?.city || "",
-      address: propertyDetails?.address || "",
+      country: carDetails?.country || "",
+      city: carDetails?.city || "",
+      area: carDetails?.area || "",
     },
     validate: {
       country: (value) => validateString(value),
       city: (value) => validateString(value),
-      address: (value) => validateString(value),
+      area: (value) => validateString(value),
     },
   });
-  const { country, address, city } = form.values;
+  const { country, city, area } = form.values;
 
   const handleSubmit = () => {
     const { errors } = form.validate();
     if (Object.keys(errors).length === 0) {
-      setPropertyDetails((prev) => ({ ...prev, country, city, address }));
+      setCarDetails((prev) => ({ ...prev, country, city, area }));
       nextStep();
     }
   };
@@ -55,12 +55,12 @@ const AddLocation = ({ propertyDetails, setPropertyDetails, nextStep }) => {
           <TextInput
             w={"100%"}
             withAsterisk
-            label="Address"
-            {...form.getInputProps("address")}
+            label="Area"
+            {...form.getInputProps("area")}
           />
         </div>
         <div className="md:flex-1 p-2 md:mt-0 mt-4">
-          <Map address={address} city={city} country={country} centered />
+          <Map address={area} city={city} country={country} centered />
         </div>
       </div>
       <Group justify="center" mt="xl">
@@ -71,12 +71,12 @@ const AddLocation = ({ propertyDetails, setPropertyDetails, nextStep }) => {
 };
 
 AddLocation.propTypes = {
-  propertyDetails: PropTypes.shape({
+  carDetails: PropTypes.shape({
     country: PropTypes.string,
     city: PropTypes.string,
-    address: PropTypes.string,
+    area: PropTypes.string,
   }).isRequired,
-  setPropertyDetails: PropTypes.func.isRequired,
+  setCarDetails: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
 };
 

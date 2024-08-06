@@ -1,16 +1,14 @@
-// src/utils/Api.jsx
-
 import axios from "axios";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 const api = axios.create({
-  baseURL: "http://localhost:6000/api",
+  baseURL: "http://localhost:5000/api",
 });
 
-export const getAllProperties = async () => {
+export const getAllCars = async () => {
   try {
-    const response = await api.get("/residency/allcars", {
+    const response = await api.get("/allcars", {
       timeout: 10000,
     });
     if (response.status >= 400) {
@@ -19,35 +17,15 @@ export const getAllProperties = async () => {
     return response.data;
   } catch (error) {
     toast.error(
-      `Error fetching properties: ${
-        error.response?.data?.error || error.message
-      }`
+      `Error fetching cars: ${error.response?.data?.error || error.message}`
     );
     throw error;
   }
 };
 
-export const getProperty = async (id) => {
-  try {
-    const response = await api.get(`/residency/${id}`, {
-      timeout: 10000,
-    });
-    if (response.status >= 400) {
-      throw new Error(response.data.message || "Something went wrong");
-    }
-    return response.data;
-  } catch (error) {
-    toast.error(
-      `Error fetching property: ${error.response?.data?.error || error.message}`
-    );
-    throw error;
-  }
-};
-
-// New function to get car details
 export const getCar = async (id) => {
   try {
-    const response = await api.get(`/residency/car/${id}`, {
+    const response = await api.get(`/car/${id}`, {
       timeout: 10000,
     });
     if (response.status >= 400) {
@@ -81,13 +59,12 @@ export const createUser = async (email, token) => {
   }
 };
 
-export const bookVisit = async (date, propertyId, email, token) => {
+export const bookCar = async (date, carId, email, token) => {
   try {
     await api.post(
-      `/user/bookcar/${propertyId}`,
+      `/user/bookcar/${carId}`,
       {
         email,
-        id: propertyId,
         date: dayjs(date).format("DD/MM/YYYY"),
       },
       {
@@ -96,22 +73,21 @@ export const bookVisit = async (date, propertyId, email, token) => {
         },
       }
     );
-    toast.success("Visit booked successfully");
+    toast.success("Car booked successfully");
   } catch (error) {
     toast.error(
-      `Error booking visit: ${error.response?.data?.error || error.message}`
+      `Error booking car: ${error.response?.data?.error || error.message}`
     );
     throw error;
   }
 };
 
-export const cancelVisit = async (propertyId, email, token) => {
+export const cancelBooking = async (carId, email, token) => {
   try {
     await api.post(
-      `/user/cancelCarBookings/${propertyId}`,
+      `/user/cancelCarBookings/${carId}`,
       {
         email,
-        id: propertyId,
       },
       {
         headers: {
@@ -119,27 +95,27 @@ export const cancelVisit = async (propertyId, email, token) => {
         },
       }
     );
-    toast.success("Visit canceled successfully");
+    toast.success("Booking canceled successfully");
   } catch (error) {
     toast.error(
-      `Error canceling visit: ${error.response?.data?.error || error.message}`
+      `Error canceling booking: ${error.response?.data?.error || error.message}`
     );
     throw error;
   }
 };
 
-export const createResidency = async (propertyDetails, token) => {
+export const createCar = async (carDetails, token) => {
   try {
-    const response = await api.post("/residency/car", propertyDetails, {
+    const response = await api.post("/car", carDetails, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
   } catch (error) {
-    console.error("Error creating property:", error);
+    console.error("Error creating car:", error);
     toast.error(
-      `Error creating property: ${error.response?.data?.error || error.message}`
+      `Error creating car: ${error.response?.data?.error || error.message}`
     );
     throw error;
   }

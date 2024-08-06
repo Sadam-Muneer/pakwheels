@@ -9,9 +9,7 @@ const About = () => {
     { label: "Happy Customers", value: 950 },
     { label: "Years in Business", value: 15 },
   ];
-
   const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => {
       const aboutSection = document.getElementById("about");
@@ -21,13 +19,11 @@ const About = () => {
         setIsVisible(visible);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   return (
     <section id="about" className="max-padd-container py-16 xl:py-28">
       <div className="flex ">
