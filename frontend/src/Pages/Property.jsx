@@ -12,8 +12,12 @@ import { FaCar, FaGasPump } from "react-icons/fa";
 const Property = () => {
   const { state } = useLocation();
   const { carId } = state || {};
-  const { data, isLoading, error } = useQuery(["car", carId], () =>
-    getCar(carId)
+  const { data, isLoading, error } = useQuery(
+    ["car", carId],
+    () => getCar(carId),
+    {
+      retry: 1, // Retry once on failure
+    }
   );
 
   if (isLoading) {
@@ -27,12 +31,23 @@ const Property = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <h4 className="text-red-500">Error loading car details</h4>
+        <h4 className="text-red-500">
+          Error loading car details. Please try again later.
+        </h4>
       </div>
     );
   }
 
-  const { title, image, description, price, mileage, year, features } = data;
+  const {
+    title,
+    image,
+    description,
+    price,
+    mileage,
+    year,
+    features,
+    location, // Assuming location is part of the data
+  } = data;
 
   return (
     <div className="container mx-auto py-10">
@@ -44,7 +59,7 @@ const Property = () => {
             <span className="text-xl font-bold">${price}</span>
           </div>
           <p className="mb-4">{description}</p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="flex items-center">
               <FaCar className="text-gray-500 mr-2" />
               <span>{year}</span>
@@ -59,7 +74,11 @@ const Property = () => {
             </div>
             <div className="flex items-center">
               <MdOutlineLocationOn className="text-gray-500 mr-2" />
-              <span>Location info</span>
+              <span>
+                {location
+                  ? `${location.country}, ${location.city}, ${location.area}`
+                  : "Location info not available"}
+              </span>
             </div>
           </div>
         </div>

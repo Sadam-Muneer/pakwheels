@@ -19,8 +19,8 @@ export const createCar = asyncHandler(async (req, res) => {
     country,
     city,
     area,
+    engineCapacity,
   } = req.body;
-  console.log("Received userEmail:", userEmail);
 
   // Validate listType
   const validListTypes = ["SELL", "BUY", "RENT"];
@@ -68,18 +68,19 @@ export const createCar = asyncHandler(async (req, res) => {
       data: {
         title,
         description,
-        price: parseInt(price, 10), // Ensure it is parsed as an integer
+        price: parseInt(price, 10),
         brand,
         model,
         features,
         image,
         listType,
         category,
-        kilometers: parseInt(kilometers, 10), // Ensure it is parsed as an integer
+        kilometers: parseInt(kilometers, 10),
         color,
         country,
         city,
         area,
+        engineCapacity,
         owner: { connect: { email: userEmail } },
       },
     });
@@ -121,7 +122,7 @@ export const getAllCars = asyncHandler(async (req, res) => {
   }
 });
 
-// Get car by ID
+/// Get car by ID
 export const getCar = asyncHandler(async (req, res) => {
   const { id } = req.params;
   console.log("Fetching car with ID:", id);

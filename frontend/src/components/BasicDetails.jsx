@@ -1,8 +1,17 @@
-import { useForm } from "@mantine/form";
-import { Box, Button, Group, TextInput, Select } from "@mantine/core";
 import PropTypes from "prop-types";
+import { Box, Button, Group, TextInput, Select } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
 const BasicDetails = ({ prevStep, nextStep, carDetails, setCarDetails }) => {
+  const modelOptions = Array.from({ length: 2025 - 1900 }, (_, i) => 1900 + i);
+
+  const categoryOptions = [
+    { value: "Sedan", label: "Sedan" },
+    { value: "Hatchback", label: "Hatchback" },
+    { value: "Electric Vehicle", label: "Electric Vehicle" },
+    { value: "Van", label: "Van" },
+  ];
+
   const form = useForm({
     initialValues: {
       title: carDetails.title || "",
@@ -12,6 +21,8 @@ const BasicDetails = ({ prevStep, nextStep, carDetails, setCarDetails }) => {
       model: carDetails.model || "",
       listType: carDetails.listType || "",
       category: carDetails.category || "",
+      kilometers: carDetails.kilometers || "",
+      engineCapacity: carDetails.engineCapacity || "",
     },
   });
 
@@ -54,12 +65,32 @@ const BasicDetails = ({ prevStep, nextStep, carDetails, setCarDetails }) => {
           placeholder="Brand"
           {...form.getInputProps("brand")}
         />
-        <TextInput
+        <Select
           withAsterisk
           className="mr-4"
           label="Model"
-          placeholder="Model"
+          placeholder="Select a model"
+          data={modelOptions.map((year) => ({
+            value: year.toString(),
+            label: year.toString(),
+          }))}
           {...form.getInputProps("model")}
+        />
+        <TextInput
+          label="Engine Capacity"
+          placeholder="Engine Capacity"
+          {...form.getInputProps("engineCapacity")}
+        />
+        <TextInput
+          label="Kilometers"
+          placeholder="Kilometers"
+          {...form.getInputProps("kilometers")}
+        />
+        <Select
+          label="Category"
+          placeholder="Select a category"
+          data={categoryOptions}
+          {...form.getInputProps("category")}
         />
       </Box>
       <Group justify="center" mt="xl">
@@ -83,6 +114,8 @@ BasicDetails.propTypes = {
     model: PropTypes.string,
     listType: PropTypes.string,
     category: PropTypes.string,
+    kilometers: PropTypes.string,
+    engineCapacity: PropTypes.string,
   }).isRequired,
   setCarDetails: PropTypes.func.isRequired,
 };

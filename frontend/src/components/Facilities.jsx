@@ -28,6 +28,13 @@ const Facilities = ({
       color: carDetails.color || "",
       listType: carDetails.listType || "",
     },
+    validate: {
+      features: (value) => (value.length > 0 ? null : "Features are required"),
+      kilometers: (value) =>
+        value > 0 ? null : "Kilometers must be a positive number",
+      color: (value) => (value ? null : "Color is required"),
+      listType: (value) => (value ? null : "List Type is required"),
+    },
   });
 
   const handleSubmit = async (values) => {
@@ -38,7 +45,11 @@ const Facilities = ({
         features: values.features || [],
       };
 
-      console.log("Request data:", requestData); // Log the request data
+      if (!requestData.engineCapacity) {
+        throw new Error("Engine Capacity is required");
+      }
+
+      console.log("Request data:", requestData);
 
       const response = await api.post(
         "http://localhost:5000/api/car/car",
@@ -51,10 +62,10 @@ const Facilities = ({
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success("Car details added successfully!");
         setOpened(false);
-        setActiveStep(0); // Reset the stepper
+        setActiveStep(0);
         setCarDetails({
           title: "",
           description: "",
@@ -66,11 +77,12 @@ const Facilities = ({
           userEmail: "",
           listType: "",
           category: "",
-          kilometers: "",
+          kilometers: 0,
           color: "",
           country: "",
           city: "",
           area: "",
+          engineCapacity: "",
         });
       } else {
         toast.error("Error adding car details!");
@@ -78,13 +90,24 @@ const Facilities = ({
     } catch (error) {
       console.error("Error adding car details:", error);
 
-      if (error.response?.data?.error) {
-        console.log("Server response:", error.response.data.error);
+      let errorMessage =
+        "Error adding car details. Please check the console for more information.";
+
+      if (error.response) {
+        if (error.response.status === 400) {
+          errorMessage =
+            error.response.data?.error ||
+            "Invalid request. Please check your input.";
+        } else if (error.response.status === 409) {
+          errorMessage =
+            error.response.data?.error || "Car with this title already exists.";
+        } else {
+          errorMessage =
+            error.response.data?.error || "An unexpected error occurred.";
+        }
       }
 
-      toast.error(
-        "Error adding car details. Please check the console for more information."
-      );
+      toast.error(errorMessage);
     }
   };
 
@@ -93,7 +116,11 @@ const Facilities = ({
       <Box className="w-full flex justify-center flex-wrap">
         <MultiSelect
           withAsterisk
-          data={["Feature 1", "Feature 2", "Feature 3"]}
+          data={[
+            "Air Conditioning",
+            "Bluetooth Connectivity",
+            "Navigation System",
+          ]}
           placeholder="Select Features"
           {...form.getInputProps("features")}
         />

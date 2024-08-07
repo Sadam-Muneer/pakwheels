@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Slider from "react-slider";
 import { CARS } from "../constants/data"; // Ensure path is correct
 
 const categories = ["All", "Sell", "Buy", "Rent"];

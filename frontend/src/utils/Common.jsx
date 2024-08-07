@@ -1,5 +1,14 @@
+// utils/Common.js
 export const validateString = (value) => {
-  return value?.length < 3 || value === null
-    ? "Must have atleast 3 characters"
-    : null;
+  if (!value || value.trim() === "") {
+    return "This field is required";
+  }
+  return null;
+};
+
+export const validateNumber = (value) => {
+  if (isNaN(value) || value <= 0) {
+    return "Please enter a valid number";
+  }
+  return null;
 };

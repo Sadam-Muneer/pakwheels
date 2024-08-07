@@ -1,5 +1,6 @@
 import express from "express";
 import { prisma } from "../Config/PrismaConfig.js"; // Import Prisma client
+import { createCar, getAllCars, getCar } from "../Controllers/CarController.js"; // Import controller functions
 
 const router = express.Router();
 
@@ -24,61 +25,62 @@ router.post("/car", async (req, res) => {
     country,
     city,
     area,
+    engineCapacity,
   } = requestData;
 
-  // Convert price to integer and validate
-  const priceInt = parseInt(price, 10);
-  if (isNaN(priceInt)) {
-    return res.status(400).json({ error: "Invalid price" });
+  if (!engineCapacity) {
+    return res.status(400).json({ error: "Engine capacity is required" });
   }
 
-  // Example validation
-  if (!title || typeof title !== "string") {
-    return res.status(400).json({ error: "Invalid title" });
-  }
+  // Convert other fields as necessary and validate
 
   try {
-    // Check for unique title
-    const existingCar = await prisma.car.findFirst({
-      where: { title, userEmail },
-    });
-
-    if (existingCar) {
-      return res.status(400).json({
-        error:
-          "A car with this title already exists for the given user. Please use a different title.",
-      });
-    }
-
-    // Save car details
-    const newCar = await prisma.car.create({
+    const car = await prisma.car.create({
       data: {
         title,
         description,
-        price: priceInt, // Use the integer value for price
+        price: parseInt(price, 10),
         brand,
         model,
         features,
         image,
-        userEmail,
         listType,
         category,
-        kilometers,
+        kilometers: parseInt(kilometers, 10),
         color,
         country,
         city,
         area,
+        engineCapacity,
+        owner: { connect: { email: userEmail } },
       },
     });
 
-    res
-      .status(200)
-      .json({ message: "Car details added successfully", car: newCar });
+    res.status(201).json({
+      message: "Car created successfully",
+      car,
+    });
   } catch (error) {
-    console.error("Error adding car details:", error);
-    res.status(500).json({ error: "Failed to save car details" });
+    console.error("Error creating car:", error);
+    if (error.code === "P2002") {
+      res.status(400).json({
+        error:
+          "A car with this title already exists for the given user. Please use a different title.",
+      });
+    } else {
+      res.status(500).json({
+        error:
+          "Internal server error. Something went wrong, please try again later.",
+        details: error.message,
+      });
+    }
   }
 });
 
-// Export the router
+// Route to get all cars
+router.get("/cars", getAllCars);
+
+// Route to get car by ID
+router.get("/:id", getCar);
+
 export { router as CarRoute };

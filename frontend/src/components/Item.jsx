@@ -2,8 +2,13 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 const Item = ({ car }) => {
-  const { title, image, description, price, listType } = car;
   const navigate = useNavigate();
+
+  if (!car) {
+    return <div>Error: Car not found</div>;
+  }
+
+  const { title, image, description, price, listType, id } = car;
 
   return (
     <div className="rounded-2xl p-3 bg-white">
@@ -18,7 +23,7 @@ const Item = ({ car }) => {
       <div className="flex justify-between items-center">
         <div className="bold-20">${price}</div>
         <button
-          onClick={() => navigate(`/listing/${car.id}`)}
+          onClick={() => navigate(`/listing/${id}`)}
           className="btn-secondary rounded-xl !py-[7px] !px-5 shadow-sm"
         >
           View Details
@@ -33,7 +38,7 @@ Item.propTypes = {
     title: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired, // Ensure price is a number
     listType: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
   }).isRequired,
