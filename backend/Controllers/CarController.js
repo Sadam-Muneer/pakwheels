@@ -9,7 +9,6 @@ export const createCar = asyncHandler(async (req, res) => {
     price,
     brand,
     model,
-
     features,
     image,
     userEmail,

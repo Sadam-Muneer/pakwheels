@@ -19,6 +19,7 @@ const AddLocation = ({ carDetails, setCarDetails, nextStep }) => {
       area: (value) => validateString(value),
     },
   });
+
   const { country, city, area } = form.values;
 
   const handleSubmit = () => {
@@ -43,6 +44,7 @@ const AddLocation = ({ carDetails, setCarDetails, nextStep }) => {
             withAsterisk
             label="Country"
             clearable
+            searchable
             data={getAll()}
             {...form.getInputProps("country")}
           />

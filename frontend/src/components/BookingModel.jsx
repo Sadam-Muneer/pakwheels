@@ -5,7 +5,7 @@ import { DatePicker } from "@mantine/dates";
 import { useMutation } from "react-query";
 import UserDetailsContext from "../context/UserDetailsContext";
 import { toast } from "react-toastify";
-import { bookVisit, cancelVisit } from "../utils/Api"; // Assuming you have a cancelVisit function
+import { bookVisit, cancelVisit } from "../utils/Api";
 
 const BookingModel = ({
   opened,

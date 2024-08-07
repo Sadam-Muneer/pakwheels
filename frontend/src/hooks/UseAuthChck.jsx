@@ -5,19 +5,17 @@ import axios from "axios";
 const UseAuthChck = () => {
   const { isAuthenticated, isLoading, loginWithRedirect, logout, user, error } =
     useAuth0();
-
   const saveUserDetails = async (user) => {
     try {
       console.log("Sending user details to backend:", user);
-      const response = await axios.post("/api/user/register", {
-        email: user.email,
-        name: user.name,
-        picture: user.picture, // Include profile picture if needed
-      });
-      console.log("User details saved successfully:", response.data);
-      toast.success("User details saved successfully!", {
-        position: "bottom-right",
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/user/register",
+        {
+          email: user.email,
+          name: user.name,
+          picture: user.picture,
+        }
+      );
     } catch (err) {
       console.error("Error saving user details:", err);
       toast.error(

@@ -9,7 +9,8 @@ import BasicDetails from "./BasicDetails";
 
 const AddPropertyModel = ({ opened, setOpened }) => {
   const [activeStep, setActiveStep] = useState(0);
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [token, setToken] = useState("");
 
   const [carDetails, setCarDetails] = useState({
     title: "",
@@ -17,7 +18,6 @@ const AddPropertyModel = ({ opened, setOpened }) => {
     price: "",
     brand: "",
     model: "",
-    year: "",
     features: "",
     image: null,
     userEmail: "",
@@ -39,9 +39,17 @@ const AddPropertyModel = ({ opened, setOpened }) => {
     }
   }, [isAuthenticated, user]);
 
+  useEffect(() => {
+    const getToken = async () => {
+      if (isAuthenticated) {
+        const token = await getAccessTokenSilently();
+        setToken(token);
+      }
+    };
+    getToken();
+  }, [isAuthenticated, getAccessTokenSilently]);
+
   const nextStep = () => {
-    console.log("Current Step:", activeStep);
-    console.log("Car Details:", carDetails);
     setActiveStep((current) => current + 1);
   };
 
@@ -52,19 +60,15 @@ const AddPropertyModel = ({ opened, setOpened }) => {
       opened={opened}
       onClose={() => setOpened(false)}
       closeOnClickOutside
-      size={"90rem"}
+      size="90rem"
     >
-      <Container h={"34rem"} w={"100%"}>
+      <Container h="34rem" w="100%">
         <Stepper
           active={activeStep}
           onStepClick={setActiveStep}
           allowNextStepsSelect={false}
         >
-          <Stepper.Step
-            label="Location"
-            description="Address"
-            onClick={nextStep}
-          >
+          <Stepper.Step label="Location" description="Address">
             <AddLocation
               carDetails={carDetails}
               setCarDetails={setCarDetails}
@@ -97,9 +101,12 @@ const AddPropertyModel = ({ opened, setOpened }) => {
               setCarDetails={setCarDetails}
               setOpened={setOpened}
               setActiveStep={setActiveStep}
+              token={token}
             />
           </Stepper.Step>
-          <Stepper.Completed></Stepper.Completed>
+          <Stepper.Completed>
+            {/* Add any completion content here if needed */}
+          </Stepper.Completed>
         </Stepper>
       </Container>
     </Modal>

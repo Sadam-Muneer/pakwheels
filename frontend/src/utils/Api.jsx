@@ -106,11 +106,16 @@ export const cancelBooking = async (carId, email, token) => {
 
 export const createCar = async (carDetails, token) => {
   try {
-    const response = await api.post("/car", carDetails, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await api.post(
+      "http://localhost:5000/api/car/car",
+      carDetails,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("Car created:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error creating car:", error);
@@ -120,3 +125,5 @@ export const createCar = async (carDetails, token) => {
     throw error;
   }
 };
+
+export default api;
