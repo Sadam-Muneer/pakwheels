@@ -142,7 +142,6 @@ const Facilities = ({
           placeholder="Pick one"
           data={[
             { value: "SELL", label: "SELL" },
-            { value: "BUY", label: "BUY" },
             { value: "RENT", label: "RENT" },
           ]}
           {...form.getInputProps("listType")}
