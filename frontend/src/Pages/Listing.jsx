@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { CARS } from "../constants/data"; // Ensure path is correct
+import axios from "axios";
+import { Range } from "react-range";
+import Item from "../components/Item";
 
 const categories = ["All", "Sell", "Buy", "Rent"];
-const brands = ["Toyota", "Honda", "Ford", "BMW", "Audi"]; // Add more brands as needed
-const models = ["2022", "2023", "2022"]; // Add more models as needed
-const colors = ["Red", "Blue", "Green", "Black", "White"]; // Add more colors as needed
-const countries = ["Pakistan"]; // Add more countries as needed
-const cities = ["Karachi", "Lahore", "Islamabad"]; // Add more cities as needed
+const brands = ["Toyota", "Honda", "Ford", "BMW", "Audi"];
+const models = ["2022", "2023", "2024"];
+const colors = ["Red", "Blue", "Green", "Black", "White"];
+const countries = ["Pakistan"];
+const cities = ["Karachi", "Lahore", "Islamabad"];
 const areas = [
   "Clifton",
   "Gulberg",
@@ -26,9 +28,9 @@ const Listing = () => {
     year: "",
     color: "",
     minPrice: 0,
-    maxPrice: 1000000, // Set a high initial max price
+    maxPrice: 1000000,
     minKilometers: 0,
-    maxKilometers: 1000000, // Set a high initial max kilometers
+    maxKilometers: 1000000,
     listType: "",
     country: "",
     city: "",
@@ -36,13 +38,19 @@ const Listing = () => {
   });
 
   useEffect(() => {
-    if (CARS && CARS.length) {
-      console.log("CARS data:", CARS); // Log CARS data
-      setCars(CARS);
-      applyFilters(CARS);
-    } else {
-      console.error("No cars data available.");
-    }
+    axios
+      .get("http://localhost:5000/api/car/cars")
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setCars(response.data);
+          applyFilters(response.data);
+        } else {
+          console.error("Unexpected data format:", response.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching cars:", error);
+      });
   }, []);
 
   useEffect(() => {
@@ -77,10 +85,10 @@ const Listing = () => {
         (year === "" || car.year === parseInt(year)) &&
         (color === "" ||
           car.color.toLowerCase().includes(color.toLowerCase())) &&
-        car.price >= minPrice &&
-        car.price <= maxPrice &&
-        car.kilometers >= minKilometers &&
-        car.kilometers <= maxKilometers &&
+        (minPrice === 0 || car.price >= minPrice) &&
+        (maxPrice === 1000000 || car.price <= maxPrice) &&
+        (minKilometers === 0 || car.kilometers >= minKilometers) &&
+        (maxKilometers === 1000000 || car.kilometers <= maxKilometers) &&
         (listType === "" ||
           car.listType.toLowerCase() === listType.toLowerCase()) &&
         (country === "" ||
@@ -93,7 +101,6 @@ const Listing = () => {
     setFilteredCars(filtered);
   };
 
-  // Filter handler
   const handleFilterClick = (type) => {
     if (type === "all") {
       setFilter({
@@ -119,24 +126,22 @@ const Listing = () => {
     }
   };
 
-  // Handle slider change
-  const handlePriceSliderChange = (value) => {
+  const handlePriceSliderChange = (values) => {
     setFilter({
       ...filter,
-      minPrice: value[0],
-      maxPrice: value[1],
+      minPrice: values[0],
+      maxPrice: values[1],
     });
   };
 
-  const handleKilometersSliderChange = (value) => {
+  const handleKilometersSliderChange = (values) => {
     setFilter({
       ...filter,
-      minKilometers: value[0],
-      maxKilometers: value[1],
+      minKilometers: values[0],
+      maxKilometers: values[1],
     });
   };
 
-  // Determine max price for slider
   const maxPrice = Math.max(...cars.map((car) => car.price), 1000000);
   const maxKilometers = Math.max(...cars.map((car) => car.kilometers), 1000000);
 
@@ -144,7 +149,6 @@ const Listing = () => {
     <section className="max-padd-container py-16 xl:py-28 rounded-3xl">
       <h2 className="h2 text-center mb-8 py">Car Listings</h2>
       <div className="filter-container mb-4 mx-2 px-2">
-        {/* Buttons, Category, and Brand in one row */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap gap-4 justify-center mb-4">
             <select
@@ -242,72 +246,102 @@ const Listing = () => {
               ))}
             </select>
           </div>
-        </div>
+          <div className="filter-controls mt-10 w-52">
+            <label className="block mb-2">Price Range</label>
+            <Range
+              step={1000}
+              min={0}
+              max={maxPrice}
+              values={[filter.minPrice, filter.maxPrice]}
+              onChange={(values) => handlePriceSliderChange(values)}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  style={{
+                    ...props.style,
+                    height: "6px",
+                    width: "100%",
+                    backgroundColor: "#ddd",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props, index }) => (
+                <div
+                  {...props}
+                  style={{
+                    ...props.style,
+                    height: "24px",
+                    width: "24px",
+                    backgroundColor: "#007bff",
+                    borderRadius: "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              )}
+            />
+            <div>
+              ${filter.minPrice} - ${filter.maxPrice}
+            </div>
 
+            <label className="block mb-2 mt-4">Kilometers Range</label>
+            <Range
+              step={1000}
+              min={0}
+              max={maxKilometers}
+              values={[filter.minKilometers, filter.maxKilometers]}
+              onChange={(values) => handleKilometersSliderChange(values)}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  style={{
+                    ...props.style,
+                    height: "6px",
+                    width: "100%",
+                    backgroundColor: "#ddd",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props, index }) => (
+                <div
+                  {...props}
+                  style={{
+                    ...props.style,
+                    height: "24px",
+                    width: "24px",
+                    backgroundColor: "#007bff",
+                    borderRadius: "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              )}
+            />
+            <div>
+              {filter.minKilometers} - {filter.maxKilometers} km
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="listing-container">
         {filteredCars.length > 0 ? (
           <div className="car-list flex flex-wrap justify-center gap-6 mt-10">
             {filteredCars.map((car) => (
-              <div
-                key={car.id}
-                className="car-item flex flex-col border rounded-lg p-4 bg-white shadow-md w-full sm:w-80 md:w-96"
-              >
-                <h3 className="text-xl font-bold">{car.title}</h3>
-                <img
-                  src={car.image}
-                  alt={car.title}
-                  className="w-full h-auto mt-2"
-                />
-                <div className="flex">
-                  <div className="mt-4 flex-1">
-                    <h4 className="text-lg font-semibold">Category</h4>
-                    <p>{car.listType}</p>
-                  </div>
-                  <div className="mt-4 flex-1">
-                    <h4 className="text-lg font-semibold">Brand</h4>
-                    <p>{car.brand}</p>
-                  </div>
-                  <div className="mt-4 flex-1">
-                    <h4 className="text-lg font-semibold">Model</h4>
-                    <p>{car.model}</p>
-                  </div>
-                  <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Km</h4>
-                    <p>{car.kilometers} km</p>
-                  </div>
-                </div>
-                <div className="flex">
-                  <div className="mt-2 flex-1">
-                    <h4 className="text-lg font-semibold">Price</h4>
-                    <p>PKR {car.price}</p>
-                  </div>
-                  <div className="mt-2">
-                    <h4 className="text-lg font-semibold">Color</h4>
-                    <p>{car.color}</p>
-                  </div>
-                </div>
-                <div className="flex">
-                  <div className="mt-2">
-                    <h4 className="text-lg font-semibold">Features</h4>
-                    <p>{car.features.join(", ")}</p>
-                  </div>
-                  <div className="mt-2">
-                    <h4 className="text-lg font-semibold">Location</h4>
-                    <p>
-                      {car.country}, {car.city}, {car.area}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <h4 className="text-lg font-semibold">Description</h4>
-                  <p>{car.description}</p>
-                </div>
-              </div>
+              <Item key={car.id} car={car} />
             ))}
           </div>
         ) : (
-          <p className="text-center text-lg mt-8">
-            No listings available based on your search
+          <p className="text-center mt-10">
+            No cars found matching the filters.
           </p>
         )}
       </div>

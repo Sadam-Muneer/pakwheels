@@ -131,7 +131,6 @@ export const getCar = asyncHandler(async (req, res) => {
     const car = await prisma.car.findUnique({
       where: { id },
     });
-
     if (car) {
       res.send(car);
     } else {

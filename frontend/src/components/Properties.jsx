@@ -7,16 +7,36 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Item from "./Item";
-import { CARS } from "../constants/data"; // Ensure path is correct
+import axios from "axios";
 
 const Properties = () => {
   const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (CARS && CARS.length) {
-      setCars(CARS);
-    }
+    const fetchCars = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/car/cars");
+        setCars(response.data);
+      } catch (err) {
+        console.error("Error fetching car data:", err);
+        setError("Error fetching car data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <section className="max-padd-container">

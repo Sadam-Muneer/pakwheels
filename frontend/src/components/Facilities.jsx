@@ -12,7 +12,6 @@ import { useForm } from "@mantine/form";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import api from "../utils/Api";
-
 const Facilities = ({
   prevStep,
   carDetails,

@@ -1,6 +1,6 @@
 import express from "express";
-import { prisma } from "../Config/PrismaConfig.js"; // Import Prisma client
-import { createCar, getAllCars, getCar } from "../Controllers/CarController.js"; // Import controller functions
+import { prisma } from "../Config/PrismaConfig.js";
+import { createCar, getAllCars, getCar } from "../Controllers/CarController.js";
 
 const router = express.Router();
 
@@ -31,8 +31,6 @@ router.post("/car", async (req, res) => {
   if (!engineCapacity) {
     return res.status(400).json({ error: "Engine capacity is required" });
   }
-
-  // Convert other fields as necessary and validate
 
   try {
     const car = await prisma.car.create({

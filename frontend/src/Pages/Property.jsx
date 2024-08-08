@@ -1,87 +1,97 @@
-import { useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
-import { getCar } from "../constants/data";
-import { PuffLoader } from "react-spinners";
-import {
-  MdOutlineSpeed,
-  MdOutlineBuild,
-  MdOutlineLocationOn,
-} from "react-icons/md";
-import { FaCar, FaGasPump } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import Map from "../components/Map";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const Property = () => {
-  const { state } = useLocation();
-  const { carId } = state || {};
-  const { data, isLoading, error } = useQuery(
-    ["car", carId],
-    () => getCar(carId),
-    {
-      retry: 1, // Retry once on failure
-    }
-  );
+  const { propertyId } = useParams();
+  const [car, setCar] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <PuffLoader color="#4A90E2" />
-      </div>
-    );
+  useEffect(() => {
+    const fetchCarData = async () => {
+      try {
+        console.log("Fetching car with ID:", propertyId);
+        const response = await axios.get(
+          `http://localhost:5000/api/car/${propertyId}`
+        );
+        console.log("Response:", response);
+        if (!response.data) {
+          throw new Error("Car not found");
+        }
+        setCar(response.data);
+      } catch (err) {
+        console.error("Error fetching car data:", err);
+        setError("Error: Car not found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCarData();
+  }, [propertyId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <h4 className="text-red-500">
-          Error loading car details. Please try again later.
-        </h4>
-      </div>
-    );
+    return <div>{error}</div>;
   }
 
   const {
     title,
-    image,
     description,
     price,
-    mileage,
-    year,
+    brand,
+    model,
     features,
-    location, // Assuming location is part of the data
-  } = data;
+    image,
+    userEmail,
+    listType,
+    category,
+    kilometers,
+    color,
+    country,
+    city,
+    area,
+    engineCapacity,
+  } = car;
+
+  const fullAddress = `${area}, ${city}, ${country}`;
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex flex-col md:flex-row">
-        <img src={image} alt={title} className="w-full md:w-1/2 rounded-lg" />
-        <div className="md:w-1/2 md:pl-10">
-          <h1 className="text-3xl font-bold mb-4">{title}</h1>
-          <div className="flex items-center mb-4">
-            <span className="text-xl font-bold">${price}</span>
-          </div>
-          <p className="mb-4">{description}</p>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="flex items-center">
-              <FaCar className="text-gray-500 mr-2" />
-              <span>{year}</span>
-            </div>
-            <div className="flex items-center">
-              <FaGasPump className="text-gray-500 mr-2" />
-              <span>{mileage} km</span>
-            </div>
-            <div className="flex items-center">
-              <MdOutlineBuild className="text-gray-500 mr-2" />
-              <span>{features.join(", ")}</span>
-            </div>
-            <div className="flex items-center">
-              <MdOutlineLocationOn className="text-gray-500 mr-2" />
-              <span>
-                {location
-                  ? `${location.country}, ${location.city}, ${location.area}`
-                  : "Location info not available"}
-              </span>
-            </div>
-          </div>
+    <div className="max-padd-container rounded-2xl p-3 bg-white pt-32">
+      <div className="pb-2 relative">
+        <img src={image} alt={title} className="rounded-xl" />
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="bold-16 text-gray-500">{listType}</span>
+      </div>
+      <h4 className="medium-18 line-clamp-1">{title}</h4>
+      <p className="pt-2 mb-4 line-clamp-2">{description}</p>
+      <div className="flex justify-between items-center">
+        <div className="bold-20">${price}</div>
+      </div>
+      <div className="pt-4">
+        <div className="flex gap-10">
+          <h3>Brand: {brand}</h3>
+          <h3>Model: {model}</h3>
         </div>
+
+        <p>Features: {features.join(", ")}</p>
+        <p>Email: {userEmail}</p>
+        <p>Category: {category}</p>
+        <p>Kilometers: {kilometers}</p>
+        <p>Color: {color}</p>
+        <p>Country: {country}</p>
+        <p>City: {city}</p>
+        <p>Area: {area}</p>
+        <p>Engine Capacity: {engineCapacity}</p>
+      </div>
+      <div className="flex-1">
+        <Map address={fullAddress} />
       </div>
     </div>
   );
