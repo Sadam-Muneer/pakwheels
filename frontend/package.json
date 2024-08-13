@@ -20,6 +20,7 @@
     "cloudinary": "^2.3.0",
     "dayjs": "^1.11.11",
     "esri-leaflet-geocoder": "^2.3.3",
+    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "prop-types": "^15.8.1",
     "rc-slider": "^11.1.0",

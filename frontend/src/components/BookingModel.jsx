@@ -52,11 +52,10 @@ const BookingModel = ({
       return bookVisit(date, propertyId, email, userDetails.token);
     },
     {
-      onSuccess: () => handleBookingSuccessful(),
+      onSuccess: handleBookingSuccessful,
       onError: (error) => {
         console.error("Error booking visit:", error);
-        const errorMessage =
-          error.response && error.response.data && error.response.data.message;
+        const errorMessage = error.response?.data?.message;
         if (errorMessage === "This Residency is Already Booked By You") {
           toast.error("You have already booked this visit.");
         }
@@ -73,7 +72,7 @@ const BookingModel = ({
       return cancelVisit(propertyId, email, userDetails.token);
     },
     {
-      onSuccess: () => handleCancelBookingSuccessful(),
+      onSuccess: handleCancelBookingSuccessful,
       onError: (error) => {
         console.error("Error canceling booking:", error);
         toast.error("Something went wrong, please try again.");
@@ -94,35 +93,33 @@ const BookingModel = ({
   };
 
   return (
-    <div>
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="Select Your Date To Visit"
-        centered
-      >
-        <div className="flexCenter flex-col gap-4">
-          <DatePicker
-            value={selectedDate}
-            onChange={setSelectedDate}
-            minDate={new Date()}
-          />
-          <Button
-            disabled={!selectedDate || bookingMutation.isLoading}
-            onClick={handleBookVisit}
-          >
-            {bookingMutation.isLoading ? "Booking..." : "Book Visit"}
-          </Button>
-          <Button
-            color="red"
-            disabled={cancelMutation.isLoading}
-            onClick={handleCancelVisit}
-          >
-            {cancelMutation.isLoading ? "Canceling..." : "Cancel Booking"}
-          </Button>
-        </div>
-      </Modal>
-    </div>
+    <Modal
+      opened={opened}
+      onClose={() => setOpened(false)}
+      title="Select Your Date To Visit"
+      centered
+    >
+      <div className="flexCenter flex-col gap-4">
+        <DatePicker
+          value={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date()}
+        />
+        <Button
+          disabled={!selectedDate || bookingMutation.isLoading}
+          onClick={handleBookVisit}
+        >
+          {bookingMutation.isLoading ? "Booking..." : "Book Visit"}
+        </Button>
+        <Button
+          color="red"
+          disabled={cancelMutation.isLoading}
+          onClick={handleCancelVisit}
+        >
+          {cancelMutation.isLoading ? "Canceling..." : "Cancel Booking"}
+        </Button>
+      </div>
+    </Modal>
   );
 };
 

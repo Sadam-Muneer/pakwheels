@@ -17,11 +17,13 @@ const Properties = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/car/cars");
+        const response = await axios.get(
+          "http://localhost:4000/api/product/allproducts"
+        );
         setCars(response.data);
       } catch (err) {
-        console.error("Error fetching car data:", err);
-        setError("Error fetching car data");
+        console.error("Error fetching item data:", err);
+        setError("Error fetching item data");
       } finally {
         setLoading(false);
       }
@@ -79,9 +81,9 @@ const Properties = () => {
           modules={[Autoplay]}
           className="h-[488px] md:h-[533px] xl:h-[422px] mt-5"
         >
-          {cars.slice(0, 6).map((car) => (
-            <SwiperSlide key={car.id}>
-              <Item car={car} />
+          {cars.slice(0, 6).map((item) => (
+            <SwiperSlide key={item.id}>
+              <Item item={item} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -89,5 +91,4 @@ const Properties = () => {
     </section>
   );
 };
-
 export default Properties;

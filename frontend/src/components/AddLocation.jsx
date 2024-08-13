@@ -9,9 +9,9 @@ const AddLocation = ({ carDetails, setCarDetails, nextStep }) => {
   const { getAll } = useCountries();
   const form = useForm({
     initialValues: {
-      country: carDetails?.country || "",
-      city: carDetails?.city || "",
-      area: carDetails?.area || "",
+      country: carDetails.country || "",
+      city: carDetails.city || "",
+      area: carDetails.area || "",
     },
     validate: {
       country: (value) => validateString(value),

@@ -1,100 +1,76 @@
-import React, { useEffect, useState } from "react";
-import Map from "../components/Map";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import Map from "../components/Map";
+import "leaflet/dist/leaflet.css";
 
 const Property = () => {
-  const { propertyId } = useParams();
+  const { id } = useParams();
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCarData = async () => {
+    const fetchCar = async () => {
       try {
-        console.log("Fetching car with ID:", propertyId);
         const response = await axios.get(
-          `http://localhost:5000/api/car/${propertyId}`
+          `http://localhost:4000/api/product/${id}`
         );
-        console.log("Response:", response);
-        if (!response.data) {
-          throw new Error("Car not found");
-        }
         setCar(response.data);
       } catch (err) {
-        console.error("Error fetching car data:", err);
-        setError("Error: Car not found");
+        console.error("Error fetching product data:", err);
+        setError("product not found");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCarData();
-  }, [propertyId]);
+    fetchCar();
+  }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
+  if (!car) return <div className="text-center p-4">No car found</div>;
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
+  // Destructure necessary fields from car
   const {
     title,
     description,
     price,
-    brand,
-    model,
-    features,
     image,
-    userEmail,
     listType,
-    category,
-    kilometers,
-    color,
     country,
     city,
     area,
-    engineCapacity,
+    brand,
   } = car;
 
-  const fullAddress = `${area}, ${city}, ${country}`;
+  // Construct full address
+  const fullAddress = `${area || ""}, ${city || ""}, ${country || ""}`;
 
   return (
-    <div className="max-padd-container rounded-2xl p-3 bg-white pt-32">
-      <div className="pb-2 relative">
-        <img src={image} alt={title} className="rounded-xl" />
-      </div>
-      <div className="flex justify-between items-center">
-        <span className="bold-16 text-gray-500">{listType}</span>
-      </div>
-      <h4 className="medium-18 line-clamp-1">{title}</h4>
-      <p className="pt-2 mb-4 line-clamp-2">{description}</p>
-      <div className="flex justify-between items-center">
-        <div className="bold-20">${price}</div>
-      </div>
-      <div className="pt-4">
-        <div className="flex gap-10">
-          <h3>Brand: {brand}</h3>
-          <h3>Model: {model}</h3>
+    <div className="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-md pt-32">
+      <div className="flex flex-col md:flex-row md:space-x-8">
+        <div className="md:w-1/2">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-auto rounded-lg shadow-md"
+          />
         </div>
-
-        <p>Features: {features.join(", ")}</p>
-        <p>Email: {userEmail}</p>
-        <p>Category: {category}</p>
-        <p>Kilometers: {kilometers}</p>
-        <p>Color: {color}</p>
-        <p>Country: {country}</p>
-        <p>City: {city}</p>
-        <p>Area: {area}</p>
-        <p>Engine Capacity: {engineCapacity}</p>
+        <div className="md:w-1/2">
+          <h1 className="text-2xl font-semibold mb-4">{title}</h1>
+          <p className="text-gray-700 mb-4">{description}</p>
+          <p className="text-xl font-bold mb-4">${price}</p>
+          <p className="text-xl mb-4">{country}</p>
+          <p className="text-xl mb-4">{brand}</p>
+          <p className="text-xl mb-4">{listType}</p>
+        </div>
       </div>
-      <div className="flex-1">
+      <div className="mt-8 h-64">
         <Map address={fullAddress} />
       </div>
     </div>
   );
 };
-
 export default Property;

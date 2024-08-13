@@ -41,7 +41,7 @@ const Navbar = ({ containerStyles, closeMenu }) => {
         onClick={closeMenu}
       >
         <RiCheckboxMultipleBlankFill />
-        <div>Cars</div>
+        <div>Products</div>
       </NavLink>
       <NavLink
         to="/videos"
@@ -60,7 +60,7 @@ const Navbar = ({ containerStyles, closeMenu }) => {
         className="flexCenter gap-x-1 rounded-full px-2 py-1 cursor-pointer"
       >
         <MdAddHome />
-        <div>Add Car</div>
+        <div>Add Products</div>
       </div>
       <AddPropertyModel opened={modelOpened} setOpened={setModelOpened} />
     </nav>

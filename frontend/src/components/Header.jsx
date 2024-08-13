@@ -1,5 +1,3 @@
-// Header.jsx
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -49,7 +47,7 @@ const Header = () => {
         <div className="flexBetween py-3">
           <Link to="/">
             <span className="font-[600] text-[24px]">
-              Pak <span className="font-[600] medium-20">Wheels</span>
+              <span className="font-[600] medium-20">OLX</span>
             </span>
           </Link>
           <div className="flexCenter gap-x-4">

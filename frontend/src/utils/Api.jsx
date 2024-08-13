@@ -3,12 +3,12 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:4000/api",
 });
 
 export const getAllCars = async () => {
   try {
-    const response = await api.get("/allcars", {
+    const response = await api.get("/product/allproducts", {
       timeout: 10000,
     });
     if (response.status >= 400) {
@@ -25,7 +25,7 @@ export const getAllCars = async () => {
 
 export const getCar = async (id) => {
   try {
-    const response = await api.get(`/car/${id}`, {
+    const response = await api.get(`http://localhost:4000/api/product/${id}`, {
       timeout: 10000,
     });
     if (response.status >= 400) {
@@ -59,55 +59,10 @@ export const createUser = async (email, token) => {
   }
 };
 
-export const bookCar = async (date, carId, email, token) => {
-  try {
-    await api.post(
-      `/user/bookcar/${carId}`,
-      {
-        email,
-        date: dayjs(date).format("DD/MM/YYYY"),
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    toast.success("Car booked successfully");
-  } catch (error) {
-    toast.error(
-      `Error booking car: ${error.response?.data?.error || error.message}`
-    );
-    throw error;
-  }
-};
-
-export const cancelBooking = async (carId, email, token) => {
-  try {
-    await api.post(
-      `/user/cancelCarBookings/${carId}`,
-      {
-        email,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    toast.success("Booking canceled successfully");
-  } catch (error) {
-    toast.error(
-      `Error canceling booking: ${error.response?.data?.error || error.message}`
-    );
-    throw error;
-  }
-};
-
 export const createCar = async (carDetails, token) => {
   try {
     const response = await api.post(
-      "http://localhost:5000/api/car/car",
+      "http://localhost:4000/api/product/",
       carDetails,
       {
         headers: {
@@ -115,10 +70,10 @@ export const createCar = async (carDetails, token) => {
         },
       }
     );
-    console.log("Car created:", response.data);
+    console.log("Product created:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error creating car:", error);
+    console.error("Error creating product:", error);
     toast.error(
       `Error creating car: ${error.response?.data?.error || error.message}`
     );
